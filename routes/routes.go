@@ -27,8 +27,16 @@ func SetupRouter() *gin.Engine {
 
 	router.Use(midleware.CORSMiddleware())
 	router.POST("/login", userController.LoginUser)
-	router.POST("/books", bookController.CreateBook)
-	router.GET("/books", bookController.GetBooks)
+	protected := router.Group("/")
+	protected.Use(midleware.AuthMiddleware())
+	{
+		protected.POST("/books", bookController.CreateBook)
+		protected.GET("/books", bookController.GetBooks)
+	}
+
+	// router.POST("/login", userController.LoginUser)
+	// router.POST("/books", bookController.CreateBook)
+	// router.GET("/books", bookController.GetBooks)
 
 	return router
 }

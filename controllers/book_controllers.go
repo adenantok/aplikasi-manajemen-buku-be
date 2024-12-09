@@ -28,13 +28,13 @@ func (controller *BookController) CreateBook(c *gin.Context) {
 	}
 
 	// // Ambil userID dari konteks
-	// userID, exists := c.Get("userID")
-	// if !exists {
-	// 	utils.InternalServerErrorResponse(c, "UserID not found in context")
-	// 	return
-	// }
+	userID, exists := c.Get("userID")
+	if !exists {
+		utils.InternalServerErrorResponse(c, "UserID not found in context")
+		return
+	}
 
-	// CreateBookDTO.UserID = userID.(int)
+	CreateBookDTO.UserID = userID.(int)
 
 	// Pass the DTO to the PostService to process the logic
 	createdPost, err := controller.service.CreateBook(CreateBookDTO)
