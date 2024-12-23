@@ -44,3 +44,15 @@ func (s *BookService) GetBooks() ([]dto.BookDTOResponse, error) {
 
 	return bookDTOResponse, nil
 }
+
+func (s *BookService) GetBookByID(id int) (dto.BookDTOResponse, error) {
+
+	book, err := s.repo.GetBookByID(id)
+	if err != nil {
+		return dto.BookDTOResponse{}, err
+	}
+
+	bookDTOResponse := mappers.MapToBookDTOResponse(book)
+
+	return bookDTOResponse, nil
+}

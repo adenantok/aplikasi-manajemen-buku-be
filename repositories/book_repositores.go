@@ -9,6 +9,7 @@ import (
 type BookRepository interface {
 	CreateBook(post *models.Book) (models.Book, error)
 	Getbooks() ([]models.Book, error)
+	GetBookByID(id int) (models.Book, error)
 }
 
 type bookRepository struct {
@@ -32,6 +33,17 @@ func (repo *bookRepository) Getbooks() ([]models.Book, error) {
 	var book []models.Book
 	if err := repo.db.Find(&book).Error; err != nil {
 		return book, err
+	}
+
+	return book, nil
+}
+
+func (repo *bookRepository) GetBookByID(id int) (models.Book, error) {
+
+	var book models.Book
+
+	if err := repo.db.First(&book, id).Error; err != nil {
+		return models.Book{}, err
 	}
 
 	return book, nil

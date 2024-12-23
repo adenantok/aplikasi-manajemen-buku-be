@@ -32,6 +32,7 @@ func SetupRouter() *gin.Engine {
 	{
 		protected.POST("/books", bookController.CreateBook)
 		protected.GET("/books", bookController.GetBooks)
+		protected.GET("/books/:id", bookController.GetBookByID)
 	}
 
 	// router.POST("/login", userController.LoginUser)

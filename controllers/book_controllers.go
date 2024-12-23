@@ -4,6 +4,7 @@ import (
 	"aplikasi-manajemen-buku-be/dto"
 	"aplikasi-manajemen-buku-be/services"
 	"aplikasi-manajemen-buku-be/utils"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -54,4 +55,21 @@ func (controller *BookController) GetBooks(c *gin.Context) {
 		return
 	}
 	utils.SuccessResponse(c, "books retrieved successfully", books)
+}
+
+func (controller *BookController) GetBookByID(c *gin.Context) {
+	bookID := c.Param("id")
+
+	id, err := strconv.Atoi(bookID)
+	if err != nil {
+		utils.BadRequestResponse(c, "Invalid bookID")
+		return
+	}
+
+	book, err := controller.service.GetBookByID(id)
+	if err != nil {
+		utils.InternalServerErrorResponse(c, err.Error())
+		return
+	}
+	utils.SuccessResponse(c, "book retrieved successfully", book)
 }
