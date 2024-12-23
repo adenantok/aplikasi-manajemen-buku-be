@@ -85,3 +85,7 @@ func (s *BookService) UpdateBook(updateBookDTO dto.UpdateBookDTO) (dto.BookDTORe
 
 	return bookDTOResponse, nil
 }
+
+func (s *BookService) DeleteBook(id int) error {
+	return s.repo.DeleteBook(id)
+}

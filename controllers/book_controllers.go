@@ -93,3 +93,21 @@ func (controller *BookController) UpdateBook(c *gin.Context) {
 	// Return success response with updated data
 	utils.SuccessResponse(c, "Book updated successfully", updatedBook)
 }
+
+func (controller *BookController) DeleteBook(c *gin.Context) {
+	bookID := c.Param("id")
+
+	id, err := strconv.Atoi(bookID)
+	if err != nil {
+		utils.BadRequestResponse(c, "Invalid bookID")
+		return
+	}
+
+	err = controller.service.DeleteBook(id)
+	if err != nil {
+		utils.InternalServerErrorResponse(c, err.Error())
+		return
+	}
+
+	utils.SuccessResponse(c, "Book deleted successfully", nil)
+}

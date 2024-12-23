@@ -34,6 +34,7 @@ func SetupRouter() *gin.Engine {
 		protected.GET("/books", bookController.GetBooks)
 		protected.GET("/books/:id", bookController.GetBookByID)
 		protected.PUT("/books", bookController.UpdateBook)
+		protected.DELETE("/books/:id", bookController.DeleteBook)
 	}
 
 	// router.POST("/login", userController.LoginUser)

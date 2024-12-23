@@ -11,6 +11,7 @@ type BookRepository interface {
 	Getbooks() ([]models.Book, error)
 	GetBookByID(id int) (models.Book, error)
 	UpdateBook(book *models.Book) (models.Book, error)
+	DeleteBook(id int) error
 }
 
 type bookRepository struct {
@@ -57,4 +58,8 @@ func (repo *bookRepository) UpdateBook(book *models.Book) (models.Book, error) {
 	}
 
 	return *book, nil
+}
+
+func (repo *bookRepository) DeleteBook(id int) error {
+	return repo.db.Delete(&models.Book{}, id).Error
 }
