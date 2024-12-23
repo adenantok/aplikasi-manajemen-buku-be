@@ -32,3 +32,12 @@ func MapToBooksDTO(books []models.Book) []dto.BookDTOResponse {
 	}
 	return bookDTOs
 }
+
+func MapToBookUpdateDTO(book dto.UpdateBookDTO) models.Book {
+	return models.Book{
+		ID:          book.ID,
+		Title:       book.Title,
+		Author:      book.Author,
+		Description: book.Description,
+	}
+}

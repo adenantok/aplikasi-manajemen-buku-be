@@ -56,3 +56,32 @@ func (s *BookService) GetBookByID(id int) (dto.BookDTOResponse, error) {
 
 	return bookDTOResponse, nil
 }
+
+func (s *BookService) UpdateBook(updateBookDTO dto.UpdateBookDTO) (dto.BookDTOResponse, error) {
+
+	book := mappers.MapToBookUpdateDTO(updateBookDTO)
+
+	existingBook, err := s.repo.GetBookByID(book.ID)
+	if err != nil {
+		return dto.BookDTOResponse{}, err
+	}
+
+	if book.Title != "" {
+		existingBook.Title = book.Title
+	}
+	if book.Author != "" {
+		existingBook.Author = book.Author
+	}
+	if book.Description != "" {
+		existingBook.Description = book.Description
+	}
+
+	updatedBook, err := s.repo.UpdateBook(&existingBook)
+	if err != nil {
+		return dto.BookDTOResponse{}, err
+	}
+
+	bookDTOResponse := mappers.MapToBookDTOResponse(updatedBook)
+
+	return bookDTOResponse, nil
+}

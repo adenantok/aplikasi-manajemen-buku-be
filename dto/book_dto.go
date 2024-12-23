@@ -27,3 +27,10 @@ type BookDTOResponse struct {
 type BookDTOs struct {
 	Books []BookDTOResponse `json:"books"`
 }
+
+type UpdateBookDTO struct {
+	ID          int    `json:"id" binding:"required"`
+	Title       string `json:"title" binding:"required"`
+	Author      string `json:"author" binding:"required"`
+	Description string `json:"description" binding:"required"`
+}
