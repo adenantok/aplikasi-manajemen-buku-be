@@ -4,6 +4,7 @@ import (
 	"aplikasi-manajemen-buku-be/dto"
 	"aplikasi-manajemen-buku-be/services"
 	"aplikasi-manajemen-buku-be/utils"
+	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -49,11 +50,29 @@ func (controller *BookController) CreateBook(c *gin.Context) {
 }
 
 func (controller *BookController) GetBooks(c *gin.Context) {
-	books, err := controller.service.GetBooks()
+	// Ambil parameter `page` dan `limit` dari query
+	pageStr := c.Query("page")
+	limitStr := c.Query("limit")
+
+	// Parsing nilai `page` dan `limit`, default jika kosong
+	page, err := strconv.Atoi(pageStr)
+	if err != nil || page < 1 {
+		page = 1 // Default halaman pertama
+	}
+
+	limit, err := strconv.Atoi(limitStr)
+	if err != nil || limit < 0 {
+		limit = 0 // Default: ambil semua buku
+	}
+
+	// Panggil service untuk mendapatkan buku
+	books, err := controller.service.GetBooks(page, limit)
 	if err != nil {
-		utils.InternalServerErrorResponse(c, err.Error())
+		utils.ErrorResponse(c, http.StatusInternalServerError, "Gagal mendapatkan data buku")
 		return
 	}
+
+	// Kirim respons JSON
 	utils.SuccessResponse(c, "books retrieved successfully", books)
 }
 

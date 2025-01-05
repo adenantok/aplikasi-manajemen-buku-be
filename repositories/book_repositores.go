@@ -8,10 +8,11 @@ import (
 
 type BookRepository interface {
 	CreateBook(post *models.Book) (models.Book, error)
-	Getbooks() ([]models.Book, error)
+	GetAllBooks() ([]models.Book, error)
 	GetBookByID(id int) (models.Book, error)
 	UpdateBook(book *models.Book) (models.Book, error)
 	DeleteBook(id int) error
+	GetBooksPaginated(limit, offset int) ([]models.Book, error)
 }
 
 type bookRepository struct {
@@ -30,7 +31,7 @@ func (repo *bookRepository) CreateBook(book *models.Book) (models.Book, error) {
 	return *book, nil
 }
 
-func (repo *bookRepository) Getbooks() ([]models.Book, error) {
+func (repo *bookRepository) GetAllBooks() ([]models.Book, error) {
 
 	var book []models.Book
 	if err := repo.db.Find(&book).Error; err != nil {
@@ -62,4 +63,10 @@ func (repo *bookRepository) UpdateBook(book *models.Book) (models.Book, error) {
 
 func (repo *bookRepository) DeleteBook(id int) error {
 	return repo.db.Delete(&models.Book{}, id).Error
+}
+
+func (repo *bookRepository) GetBooksPaginated(limit, offset int) ([]models.Book, error) {
+	var books []models.Book
+	result := repo.db.Limit(limit).Offset(offset).Find(&books)
+	return books, result.Error
 }
