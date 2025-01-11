@@ -34,7 +34,7 @@ func (repo *bookRepository) CreateBook(book *models.Book) (models.Book, error) {
 func (repo *bookRepository) GetAllBooks() ([]models.Book, error) {
 
 	var book []models.Book
-	if err := repo.db.Order("id").Find(&book).Error; err != nil {
+	if err := repo.db.Order("id DESC").Find(&book).Error; err != nil {
 		return book, err
 	}
 
@@ -67,6 +67,6 @@ func (repo *bookRepository) DeleteBook(id int) error {
 
 func (repo *bookRepository) GetBooksPaginated(limit, offset int) ([]models.Book, error) {
 	var books []models.Book
-	result := repo.db.Order("id").Limit(limit).Offset(offset).Find(&books)
+	result := repo.db.Order("id DESC").Limit(limit).Offset(offset).Find(&books)
 	return books, result.Error
 }
