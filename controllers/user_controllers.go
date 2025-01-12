@@ -5,6 +5,7 @@ import (
 	"aplikasi-manajemen-buku-be/services"
 	"aplikasi-manajemen-buku-be/utils"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -37,10 +38,11 @@ func (controller *UserController) LoginUser(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
-
+	expirationTime := time.Now().Add(24 * time.Hour).Unix()
 	responseData := gin.H{
 		"user":  user,
 		"token": token,
+		"exp":   expirationTime,
 	}
 	utils.SuccessResponse(c, "login successful", responseData)
 }
