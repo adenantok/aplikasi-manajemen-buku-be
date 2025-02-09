@@ -8,7 +8,7 @@ import (
 )
 type User struct {
     ID        uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`  
-    Username  string    `gorm:"uniqueIndex"`
+    Name      string    `gorm:"uniqueIndex"`
     Email     string    `gorm:"uniqueIndex"`
     Password  string    `gorm:"not null"` // Disimpan dalam bentuk hash
     Role      string    `gorm:"index;default:user"` // admin / user

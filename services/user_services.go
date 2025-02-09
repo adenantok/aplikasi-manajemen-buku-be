@@ -28,7 +28,7 @@ func (s *UserService) AddUser(userDTo dto.UserDTO) (dto.UserDTOResponse, error) 
 
 func (s *UserService) LoginUser(userDTOLogin dto.UserDTOLogin) (dto.UserDTOResponse, string, error) {
 	user := mappers.ToUserLogin(userDTOLogin)
-	user, err := s.repo.GetUserByUsername(user.Username)
+	user, err := s.repo.GetUserByEmail(user.Email)
 	if err != nil {
 		return dto.UserDTOResponse{},"", err
 	}

@@ -7,15 +7,15 @@ import (
 
 func ToUser(userDTO dto.UserDTO) models.User {
 	return models.User{
-		Username: userDTO.Username,
-		Password: userDTO.Password,
+		Name: 	userDTO.Name,
 		Email:    userDTO.Email,
+		Password: userDTO.Password,
 	}
 }
 
 func ToUserLogin(userDTO dto.UserDTOLogin) models.User {
 	return models.User{
-		Username: userDTO.Username,
+		Email: userDTO.Email,
 		Password: userDTO.Password,
 	}
 }
@@ -23,7 +23,7 @@ func ToUserLogin(userDTO dto.UserDTOLogin) models.User {
 func ToUserDTOResponse(user models.User) dto.UserDTOResponse {
 	return dto.UserDTOResponse{
 		ID:        user.ID,
-		Username:  user.Username,
+		Name:  user.Name,
 		Email:     user.Email,
 		Role:      user.Role,
 	}
