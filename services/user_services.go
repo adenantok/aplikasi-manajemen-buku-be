@@ -7,6 +7,8 @@ import (
 	"articlehub-be/repositories"
 	"articlehub-be/utils"
 	"errors"
+
+	"github.com/google/uuid"
 )
 
 type UserService struct {
@@ -19,21 +21,34 @@ func NewUserService(repo repositories.UserRepository) *UserService {
 	}
 }
 
-func (s *UserService) AddUser(userDTo dto.UserDTO) (dto.UserDTOResponse, error) {
-	user := mappers.ToUser(userDTo)
-	user.Password, _ = utils.HashPassword(user.Password)
-	user, err := s.repo.AddUser(user)
-	return mappers.ToUserDTOResponse(user), err
+func (s *UserService) AddUser(userDTO dto.UserDTO) (dto.UserDTOResponse, error) {
+	existingUser, err := s.repo.GetUserByEmail(userDTO.Email)
+	if err == nil && existingUser.ID != uuid.Nil {
+		return dto.UserDTOResponse{}, errors.New("email has been registered")
+	}
+
+	user := mappers.ToUser(userDTO)
+	passHash, err := utils.HashPassword(user.Password)
+	if err != nil {
+		return dto.UserDTOResponse{}, err
+	}
+	user.Password = passHash
+
+	result, err := s.repo.AddUser(user)
+	if err != nil {
+		return dto.UserDTOResponse{}, err
+	}
+	return mappers.ToUserDTOResponse(result), nil
 }
 
 func (s *UserService) LoginUser(userDTOLogin dto.UserDTOLogin) (dto.UserDTOResponse, string, error) {
 	user := mappers.ToUserLogin(userDTOLogin)
 	user, err := s.repo.GetUserByEmail(user.Email)
 	if err != nil {
-		return dto.UserDTOResponse{},"", err
+		return dto.UserDTOResponse{},"", errors.New("email or password is incorrect")
 	}
 	if !utils.ComparePassword(user.Password, userDTOLogin.Password) {
-		return dto.UserDTOResponse{},"", errors.New("invalid username or password")
+		return dto.UserDTOResponse{},"", errors.New("email or password is incorrect")
 	}
 	token, err := token.GenerateToken(user)
 	if err != nil {

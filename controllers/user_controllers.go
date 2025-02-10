@@ -3,7 +3,7 @@ package controllers
 import (
 	"articlehub-be/dto"
 	"articlehub-be/services"
-	"net/http"
+	"articlehub-be/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -26,23 +26,23 @@ func (controller *UserController) AddUser(c *gin.Context) {
 
 	user, err := controller.service.AddUser(userDTO)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.StatusConflictResponse(c, false, err.Error(), nil)
 		return
 	}
-
-	c.JSON(http.StatusOK, user)
+	utils.SuccessResponse(c, true, "User created successfully", user)
 }
 
 func (controller *UserController) LoginUser(c *gin.Context) {
 	var userDTO dto.UserDTOLogin
 	if err := c.ShouldBindJSON(&userDTO); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.BadRequestResponse(c, false, "Invalid request", nil)
 		return
 	}
 
 	user,token,  err := controller.service.LoginUser(userDTO)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.UnauthorizedResponse(c, false, err.Error(), nil)
+		//c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -51,6 +51,6 @@ func (controller *UserController) LoginUser(c *gin.Context) {
 		"token": token,
 	}
 
-	c.JSON(http.StatusOK, responseData)
+	utils.SuccessResponse(c, true,"Login Success", responseData)
 
 }

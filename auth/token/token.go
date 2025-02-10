@@ -32,7 +32,7 @@ func GenerateToken(user models.User) (string, error) {
 		UserID: user.ID,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
-			Issuer:    "aplikasi-manajemen-buku", // Bisa diganti dengan nama aplikasi Anda
+			Issuer:    "articlehub", // Bisa diganti dengan nama aplikasi Anda
 		},
 	}
 
